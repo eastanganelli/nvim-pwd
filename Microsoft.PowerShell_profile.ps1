@@ -9,7 +9,13 @@
 
 ## Installers
    function ModuleInstallers () {
-      Install-Module discordrpc -Scope CurrentUser
+	winget install --id JanDeDobbeleer.OhMyPosh
+	winget install --id Neovim.Neovim
+	winget install --id junegunn.fzf
+	git clone https://github.com/github/copilot.vim.git $HOME/AppData/Local/nvim/pack/github/start/copilot.vim
+	winget install --id JesseDuffield.lazygit
+      # Install-Module discordrpc -Scope CurrentUser
+	. $profile
    }
 
 ## Ultilities (Optional)
@@ -38,8 +44,6 @@
    Set-Alias g git
    Set-Alias ll ls
    Set-Alias grep findstr
-   Set-Alias tig  "C:\\Program Files\\Git\\usr\\bin\\tig.exe"
-   Set-Alias less "C:\\Program Files\\Git\\usr\\bin\\less.exe"
    New-Alias -Name clr -Value Cleaning
 
 ## Oh My Posh
