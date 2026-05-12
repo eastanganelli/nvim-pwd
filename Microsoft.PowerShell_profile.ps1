@@ -1,6 +1,8 @@
 ## Variables
    $DEV = $Env:WINAPPS
    $DEPTHAI = $Env:DEPTHAI
+   $MODEL_REPO = "TeichAI/Qwen3-4B-Instruct-2507-Claude-Haiku-4.5-Distill-GGUF"
+   $MODEL_FILE = "Qwen3-4B-Instruct-Claude-Haiku-4.5-Distill.q4_k_m.gguf"
    ## $PYTHON = $Env:PYTHON
 
 ## Imports
@@ -9,13 +11,17 @@
 
 ## Installers
    function ModuleInstallers () {
-	winget install --id JanDeDobbeleer.OhMyPosh
-	winget install --id Neovim.Neovim
-	winget install --id junegunn.fzf
-	git clone https://github.com/github/copilot.vim.git $HOME/AppData/Local/nvim/pack/github/start/copilot.vim
-	winget install --id JesseDuffield.lazygit
+	   winget install --id JanDeDobbeleer.OhMyPosh
+	   # winget install --id Neovim.Neovim
+	   winget install --id junegunn.fzf
+	   # git clone https://github.com/github/copilot.vim.git $HOME/AppData/Local/nvim/pack/github/start/copilot.vim
+	   winget install --id JesseDuffield.lazygit
       # Install-Module discordrpc -Scope CurrentUser
-	. $profile
+	   . $profile
+   }
+
+   function omp_default_theme() {
+      oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/refs/heads/main/themes/1_shell.omp.json | Invoke-Expression
    }
 
 ## Ultilities (Optional)
@@ -36,6 +42,18 @@
       python $DEPTHAI"\depthai_demo.py" --app=uvc
    }
 
+   function llamacli {
+      llama-cli.exe --hf-repo $MODEL_REPO --hf-file $MODEL_FILE -t 4 -fa on --mlock --prio 3 --ctx-size 8192 --batch-size 1024 --ubatch-size 256 --no-mmap -cnv
+   }
+   
+   function llamaserver {
+      llama-server.exe --hf-repo $MODEL_REPO --hf-file $MODEL_FILE -t 4 -fa on --mlock --prio 3 --ctx-size 10240 --batch-size 1024 --ubatch-size 256 --jinja --cache-reuse 0 --alias qwen3 --port 8080
+   }
+   
+   function CodeAider {
+      aider --openai-api-base http://localhost:8080/v1 --openai-api-key no-key-needed --model openai/qwen3 --edit-format whole
+   }
+
    function ctt {
       irm christitus.com/win | iex
    }
@@ -47,7 +65,7 @@
    New-Alias -Name clr -Value Cleaning
 
 ## Oh My Posh
-   oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\1_shell.omp.json" | Invoke-Expression
+   omp_default_theme
    $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
    if (Test-Path($ChocolateyProfile)) {
       Import-Module "$ChocolateyProfile"
